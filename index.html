@@ -2,10 +2,61 @@
 <html>
 <head>
 <title>Chaos Portal</title>
+
+<style>
+
+body{
+background:black;
+color:#00ff9d;
+font-family:monospace;
+text-align:center;
+margin-top:100px;
+}
+
+h1{
+font-size:50px;
+animation: glitch 1s infinite;
+}
+
+@keyframes glitch{
+0%{transform:translate(0)}
+20%{transform:translate(-2px,2px)}
+40%{transform:translate(2px,-2px)}
+60%{transform:translate(-1px,1px)}
+80%{transform:translate(1px,-1px)}
+100%{transform:translate(0)}
+}
+
+button{
+background:#00ff9d;
+border:none;
+padding:20px;
+font-size:20px;
+cursor:pointer;
+}
+
+</style>
+
 </head>
 
-<body style="background:black;color:lime;text-align:center;margin-top:200px;font-family:monospace;">
-<h1>CHAOS PORTAL ONLINE</h1>
+<body>
+
+<h1>CHAOS PORTAL</h1>
+
+<p>Reality stability: 63%</p>
+
+<button onclick="breakReality()">Break Reality</button>
+
+<script>
+
+function breakReality(){
+
+document.body.innerHTML=
+"<h1>SYSTEM ERROR</h1><p>Reality corrupted...</p>";
+
+}
+
+</script>
+
 </body>
 </html>
-<!-- rebuild -->
