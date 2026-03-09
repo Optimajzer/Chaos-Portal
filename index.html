@@ -7,24 +7,38 @@
 <style>
 
 body{
-background:#000;
+margin:0;
+height:100vh;
 display:flex;
 justify-content:center;
 align-items:center;
-height:100vh;
-margin:0;
+background:black;
 font-family:-apple-system,BlinkMacSystemFont,sans-serif;
 }
 
+/* PHONE */
+
 .phone{
-width:340px;
-height:680px;
-border-radius:40px;
+width:360px;
+height:720px;
+border-radius:45px;
 overflow:hidden;
-background:black;
 position:relative;
-box-shadow:0 0 60px black;
-color:white;
+box-shadow:0 0 80px black;
+}
+
+/* WALLPAPER */
+
+.wallpaper{
+position:absolute;
+width:100%;
+height:100%;
+background:
+radial-gradient(circle at 20% 20%,#ff4ecd,transparent 40%),
+radial-gradient(circle at 80% 30%,#4e8cff,transparent 40%),
+radial-gradient(circle at 50% 80%,#00ffa6,transparent 40%),
+black;
+filter:saturate(1.3);
 }
 
 /* STATUS BAR */
@@ -37,65 +51,37 @@ height:40px;
 display:flex;
 justify-content:space-between;
 align-items:center;
-padding:0 15px;
-font-size:13px;
+padding:0 18px;
+box-sizing:border-box;
+color:white;
+font-size:14px;
+z-index:5;
 }
 
-/* LOCK SCREEN */
-
-.lock{
-position:absolute;
-width:100%;
-height:100%;
-background:linear-gradient(#111,#000);
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-}
-
-.time{
-font-size:70px;
-font-weight:200;
-}
-
-.date{
-opacity:0.7;
-}
-
-.unlock{
-position:absolute;
-bottom:40px;
-opacity:0.6;
-}
-
-/* HOME */
-
-.home{
-position:absolute;
-width:100%;
-height:100%;
-display:none;
-overflow:hidden;
-}
+/* PAGES */
 
 .pages{
-display:flex;
+position:absolute;
+top:40px;
 width:200%;
 height:100%;
-transition:0.3s;
+display:flex;
+transition:0.4s;
 }
+
+/* PAGE */
 
 .page{
 width:100%;
-padding-top:70px;
+padding:30px;
 box-sizing:border-box;
 display:grid;
 grid-template-columns:repeat(4,1fr);
-gap:22px;
-padding-left:20px;
-padding-right:20px;
+gap:26px;
+color:white;
 }
+
+/* APP ICON */
 
 .app{
 text-align:center;
@@ -103,43 +89,45 @@ cursor:pointer;
 }
 
 .icon{
-width:62px;
-height:62px;
+width:64px;
+height:64px;
 border-radius:18px;
 display:flex;
 align-items:center;
 justify-content:center;
+font-size:28px;
 margin:auto;
-font-size:26px;
+box-shadow:0 8px 20px rgba(0,0,0,0.5);
 }
 
 .label{
 font-size:12px;
-margin-top:4px;
+margin-top:6px;
 }
 
 /* COLORS */
 
-.ai{background:#3b82f6;}
-.games{background:#10b981;}
-.chaos{background:#a855f7;}
-.logs{background:#f59e0b;}
-.settings{background:#6b7280;}
-.browser{background:#2563eb;}
+.ai{background:linear-gradient(#5a9cff,#2a6cff);}
+.games{background:linear-gradient(#34d399,#059669);}
+.chaos{background:linear-gradient(#c084fc,#7c3aed);}
+.logs{background:linear-gradient(#fbbf24,#f59e0b);}
+.browser{background:linear-gradient(#60a5fa,#2563eb);}
+.settings{background:linear-gradient(#9ca3af,#4b5563);}
 
 /* DOCK */
 
 .dock{
 position:absolute;
-bottom:15px;
+bottom:18px;
 left:20px;
 right:20px;
-background:rgba(255,255,255,0.1);
-border-radius:25px;
-padding:12px;
+height:80px;
+border-radius:30px;
+background:rgba(255,255,255,0.12);
+backdrop-filter:blur(20px);
 display:flex;
 justify-content:space-around;
-backdrop-filter:blur(20px);
+align-items:center;
 }
 
 /* APP SCREEN */
@@ -149,15 +137,31 @@ position:absolute;
 width:100%;
 height:100%;
 background:black;
+color:white;
 display:none;
 padding:20px;
 box-sizing:border-box;
+z-index:10;
 }
 
 .back{
 margin-bottom:20px;
+opacity:0.6;
 cursor:pointer;
-opacity:0.7;
+}
+
+/* CHAOS NOTIFICATION */
+
+.notify{
+position:absolute;
+top:60px;
+left:50%;
+transform:translateX(-50%);
+background:rgba(0,0,0,0.8);
+color:white;
+padding:12px 20px;
+border-radius:14px;
+display:none;
 }
 
 </style>
@@ -167,29 +171,18 @@ opacity:0.7;
 
 <div class="phone">
 
+<div class="wallpaper"></div>
+
 <div class="status">
-<div id="statusTime"></div>
+<div id="time"></div>
 <div>📶 🔋</div>
 </div>
 
-<!-- LOCK -->
+<div class="notify" id="notify"></div>
 
-<div class="lock" id="lock">
-
-<div class="time" id="time"></div>
-<div class="date" id="date"></div>
-
-<div class="unlock">Click to unlock</div>
-
-</div>
-
-<!-- HOME -->
-
-<div class="home" id="home">
+<!-- HOME PAGES -->
 
 <div class="pages" id="pages">
-
-<!-- PAGE 1 -->
 
 <div class="page">
 
@@ -215,16 +208,15 @@ opacity:0.7;
 
 </div>
 
-<!-- PAGE 2 -->
 
 <div class="page">
 
-<div class="app">
+<div class="app" onclick="openApp('browser')">
 <div class="icon browser">🌐</div>
 <div class="label">Browser</div>
 </div>
 
-<div class="app">
+<div class="app" onclick="openApp('settings')">
 <div class="icon settings">⚙</div>
 <div class="label">Settings</div>
 </div>
@@ -233,13 +225,13 @@ opacity:0.7;
 
 </div>
 
+<!-- DOCK -->
+
 <div class="dock">
 
 <div class="icon ai">🧠</div>
 <div class="icon games">🎮</div>
-<div class="icon chaos">🌌</div>
-
-</div>
+<div class="icon browser">🌐</div>
 
 </div>
 
@@ -247,39 +239,65 @@ opacity:0.7;
 
 <div class="appscreen" id="ai">
 
-<div class="back" onclick="closeApp()">← Back</div>
+<div class="back" onclick="closeApp()">← Home</div>
+
 <h2>AI</h2>
-<p>AI module coming soon</p>
+
+<input placeholder="Ask something..." style="width:100%;padding:10px;border-radius:10px;border:none">
 
 </div>
+
 
 <div class="appscreen" id="games">
 
-<div class="back" onclick="closeApp()">← Back</div>
-<h2>Games</h2>
-<p>No games installed</p>
+<div class="back" onclick="closeApp()">← Home</div>
+
+<h2>Dice Game</h2>
+
+<button onclick="dice()">Roll Dice</button>
+
+<h1 id="diceResult"></h1>
 
 </div>
 
+
+<div class="appscreen" id="browser">
+
+<div class="back" onclick="closeApp()">← Home</div>
+
+<h2>Browser</h2>
+
+<input id="url" placeholder="Enter URL" style="width:80%">
+<button onclick="go()">Go</button>
+
+<iframe id="frame" style="width:100%;height:80%;border:none;margin-top:10px"></iframe>
+
+</div>
+
+
 <div class="appscreen" id="chaos">
 
-<div class="back" onclick="closeApp()">← Back</div>
+<div class="back" onclick="closeApp()">← Home</div>
+
 <h2>Chaos Engine</h2>
 
 <button onclick="chaos()">Trigger Chaos</button>
 
-<p id="chaosText"></p>
-
 </div>
+
 
 <div class="appscreen" id="logs">
 
-<div class="back" onclick="closeApp()">← Back</div>
-<h2>System Logs</h2>
+<div class="back" onclick="closeApp()">← Home</div>
+
+<h2>Logs</h2>
+
+<p>No logs yet</p>
 
 </div>
 
 </div>
+
 
 <script>
 
@@ -287,67 +305,16 @@ opacity:0.7;
 
 function clock(){
 
-const now=new Date()
-
-let h=String(now.getHours()).padStart(2,'0')
-let m=String(now.getMinutes()).padStart(2,'0')
+const d=new Date()
+let h=d.getHours().toString().padStart(2,'0')
+let m=d.getMinutes().toString().padStart(2,'0')
 
 document.getElementById("time").innerText=h+":"+m
-document.getElementById("statusTime").innerText=h+":"+m
-
-document.getElementById("date").innerText=now.toDateString()
 
 }
 
 setInterval(clock,1000)
 clock()
-
-/* UNLOCK */
-
-document.getElementById("lock").onclick=function(){
-
-this.style.display="none"
-document.getElementById("home").style.display="block"
-
-}
-
-/* OPEN APP */
-
-function openApp(id){
-
-document.getElementById("home").style.display="none"
-
-document.getElementById(id).style.display="block"
-
-}
-
-/* CLOSE APP */
-
-function closeApp(){
-
-document.querySelectorAll(".appscreen").forEach(a=>{
-a.style.display="none"
-})
-
-document.getElementById("home").style.display="block"
-
-}
-
-/* CHAOS EVENT */
-
-function chaos(){
-
-const events=[
-"Reality glitch detected",
-"Unknown anomaly",
-"Chaos level rising",
-"Signal from void"
-]
-
-document.getElementById("chaosText").innerText=
-events[Math.floor(Math.random()*events.length)]
-
-}
 
 /* SWIPE */
 
@@ -363,17 +330,79 @@ let endX=e.changedTouches[0].clientX
 
 if(startX-endX>50){
 
-document.getElementById("pages").style.transform="translateX(-50%)"
+pages.style.transform="translateX(-50%)"
 
 }
 
 if(endX-startX>50){
 
-document.getElementById("pages").style.transform="translateX(0%)"
+pages.style.transform="translateX(0%)"
 
 }
 
 })
+
+/* OPEN APP */
+
+function openApp(id){
+
+document.getElementById(id).style.display="block"
+
+}
+
+/* CLOSE APP */
+
+function closeApp(){
+
+document.querySelectorAll(".appscreen").forEach(a=>a.style.display="none")
+
+}
+
+/* CHAOS */
+
+function chaos(){
+
+let events=[
+"Reality glitch detected",
+"Unknown signal from void",
+"Chaos level increased",
+"System anomaly"
+]
+
+let e=events[Math.floor(Math.random()*events.length)]
+
+let n=document.getElementById("notify")
+
+n.innerText=e
+n.style.display="block"
+
+setTimeout(()=>{
+
+n.style.display="none"
+
+},3000)
+
+}
+
+/* GAME */
+
+function dice(){
+
+let r=Math.floor(Math.random()*6)+1
+
+document.getElementById("diceResult").innerText=r
+
+}
+
+/* BROWSER */
+
+function go(){
+
+let url=document.getElementById("url").value
+
+document.getElementById("frame").src=url
+
+}
 
 </script>
 
