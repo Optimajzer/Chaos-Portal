@@ -7,24 +7,38 @@
 <style>
 
 body{
-background:black;
+background:#000;
 display:flex;
 justify-content:center;
 align-items:center;
 height:100vh;
 margin:0;
 font-family:-apple-system,BlinkMacSystemFont,sans-serif;
-color:white;
 }
 
 .phone{
 width:340px;
 height:680px;
 border-radius:40px;
-background:black;
-box-shadow:0 0 40px black;
 overflow:hidden;
+background:black;
 position:relative;
+box-shadow:0 0 60px black;
+color:white;
+}
+
+/* STATUS BAR */
+
+.status{
+position:absolute;
+top:0;
+width:100%;
+height:40px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:0 15px;
+font-size:13px;
 }
 
 /* LOCK SCREEN */
@@ -33,12 +47,11 @@ position:relative;
 position:absolute;
 width:100%;
 height:100%;
-background:linear-gradient(180deg,#111,#000);
+background:linear-gradient(#111,#000);
 display:flex;
 flex-direction:column;
-align-items:center;
 justify-content:center;
-text-align:center;
+align-items:center;
 }
 
 .time{
@@ -48,39 +61,40 @@ font-weight:200;
 
 .date{
 opacity:0.7;
-margin-bottom:40px;
 }
 
 .unlock{
-margin-top:200px;
-font-size:14px;
+position:absolute;
+bottom:40px;
 opacity:0.6;
-animation:blink 2s infinite;
 }
 
-@keyframes blink{
-0%{opacity:0.2}
-50%{opacity:1}
-100%{opacity:0.2}
-}
-
-/* HOME SCREEN */
+/* HOME */
 
 .home{
 position:absolute;
 width:100%;
 height:100%;
-background:linear-gradient(180deg,#1a1a1a,#000);
-padding:25px;
-box-sizing:border-box;
 display:none;
+overflow:hidden;
 }
 
-.grid{
+.pages{
+display:flex;
+width:200%;
+height:100%;
+transition:0.3s;
+}
+
+.page{
+width:100%;
+padding-top:70px;
+box-sizing:border-box;
 display:grid;
 grid-template-columns:repeat(4,1fr);
-gap:20px;
-margin-top:30px;
+gap:22px;
+padding-left:20px;
+padding-right:20px;
 }
 
 .app{
@@ -89,43 +103,61 @@ cursor:pointer;
 }
 
 .icon{
-width:60px;
-height:60px;
-border-radius:16px;
+width:62px;
+height:62px;
+border-radius:18px;
 display:flex;
 align-items:center;
 justify-content:center;
 margin:auto;
 font-size:26px;
-margin-bottom:5px;
 }
+
+.label{
+font-size:12px;
+margin-top:4px;
+}
+
+/* COLORS */
 
 .ai{background:#3b82f6;}
 .games{background:#10b981;}
 .chaos{background:#a855f7;}
 .logs{background:#f59e0b;}
-
-.label{
-font-size:12px;
-}
+.settings{background:#6b7280;}
+.browser{background:#2563eb;}
 
 /* DOCK */
 
 .dock{
 position:absolute;
 bottom:15px;
-left:15px;
-right:15px;
-background:rgba(255,255,255,0.08);
-border-radius:20px;
-padding:10px;
+left:20px;
+right:20px;
+background:rgba(255,255,255,0.1);
+border-radius:25px;
+padding:12px;
 display:flex;
 justify-content:space-around;
-backdrop-filter:blur(10px);
+backdrop-filter:blur(20px);
 }
 
-.dock .icon{
-margin:0;
+/* APP SCREEN */
+
+.appscreen{
+position:absolute;
+width:100%;
+height:100%;
+background:black;
+display:none;
+padding:20px;
+box-sizing:border-box;
+}
+
+.back{
+margin-bottom:20px;
+cursor:pointer;
+opacity:0.7;
 }
 
 </style>
@@ -135,45 +167,68 @@ margin:0;
 
 <div class="phone">
 
-<!-- LOCK SCREEN -->
+<div class="status">
+<div id="statusTime"></div>
+<div>📶 🔋</div>
+</div>
+
+<!-- LOCK -->
 
 <div class="lock" id="lock">
 
 <div class="time" id="time"></div>
-
 <div class="date" id="date"></div>
 
-<div class="unlock">Swipe up to unlock</div>
+<div class="unlock">Click to unlock</div>
 
 </div>
 
-
-<!-- HOME SCREEN -->
+<!-- HOME -->
 
 <div class="home" id="home">
 
-<h3>Chaos OS</h3>
+<div class="pages" id="pages">
 
-<div class="grid">
+<!-- PAGE 1 -->
 
-<div class="app">
+<div class="page">
+
+<div class="app" onclick="openApp('ai')">
 <div class="icon ai">🧠</div>
 <div class="label">AI</div>
 </div>
 
-<div class="app">
+<div class="app" onclick="openApp('games')">
 <div class="icon games">🎮</div>
 <div class="label">Games</div>
 </div>
 
-<div class="app">
+<div class="app" onclick="openApp('chaos')">
 <div class="icon chaos">🌌</div>
 <div class="label">Chaos</div>
 </div>
 
-<div class="app">
+<div class="app" onclick="openApp('logs')">
 <div class="icon logs">📜</div>
 <div class="label">Logs</div>
+</div>
+
+</div>
+
+<!-- PAGE 2 -->
+
+<div class="page">
+
+<div class="app">
+<div class="icon browser">🌐</div>
+<div class="label">Browser</div>
+</div>
+
+<div class="app">
+<div class="icon settings">⚙</div>
+<div class="label">Settings</div>
+</div>
+
 </div>
 
 </div>
@@ -188,36 +243,135 @@ margin:0;
 
 </div>
 
+<!-- APPS -->
+
+<div class="appscreen" id="ai">
+
+<div class="back" onclick="closeApp()">← Back</div>
+<h2>AI</h2>
+<p>AI module coming soon</p>
+
+</div>
+
+<div class="appscreen" id="games">
+
+<div class="back" onclick="closeApp()">← Back</div>
+<h2>Games</h2>
+<p>No games installed</p>
+
+</div>
+
+<div class="appscreen" id="chaos">
+
+<div class="back" onclick="closeApp()">← Back</div>
+<h2>Chaos Engine</h2>
+
+<button onclick="chaos()">Trigger Chaos</button>
+
+<p id="chaosText"></p>
+
+</div>
+
+<div class="appscreen" id="logs">
+
+<div class="back" onclick="closeApp()">← Back</div>
+<h2>System Logs</h2>
+
+</div>
+
 </div>
 
 <script>
 
 /* CLOCK */
 
-function updateClock(){
+function clock(){
 
 const now=new Date()
 
-const h=String(now.getHours()).padStart(2,'0')
-const m=String(now.getMinutes()).padStart(2,'0')
+let h=String(now.getHours()).padStart(2,'0')
+let m=String(now.getMinutes()).padStart(2,'0')
 
 document.getElementById("time").innerText=h+":"+m
+document.getElementById("statusTime").innerText=h+":"+m
 
 document.getElementById("date").innerText=now.toDateString()
 
 }
 
-setInterval(updateClock,1000)
-
-updateClock()
-
+setInterval(clock,1000)
+clock()
 
 /* UNLOCK */
 
-document.addEventListener("click",function(){
+document.getElementById("lock").onclick=function(){
 
-document.getElementById("lock").style.display="none"
+this.style.display="none"
 document.getElementById("home").style.display="block"
+
+}
+
+/* OPEN APP */
+
+function openApp(id){
+
+document.getElementById("home").style.display="none"
+
+document.getElementById(id).style.display="block"
+
+}
+
+/* CLOSE APP */
+
+function closeApp(){
+
+document.querySelectorAll(".appscreen").forEach(a=>{
+a.style.display="none"
+})
+
+document.getElementById("home").style.display="block"
+
+}
+
+/* CHAOS EVENT */
+
+function chaos(){
+
+const events=[
+"Reality glitch detected",
+"Unknown anomaly",
+"Chaos level rising",
+"Signal from void"
+]
+
+document.getElementById("chaosText").innerText=
+events[Math.floor(Math.random()*events.length)]
+
+}
+
+/* SWIPE */
+
+let startX=0
+
+document.addEventListener("touchstart",e=>{
+startX=e.touches[0].clientX
+})
+
+document.addEventListener("touchend",e=>{
+
+let endX=e.changedTouches[0].clientX
+
+if(startX-endX>50){
+
+document.getElementById("pages").style.transform="translateX(-50%)"
+
+}
+
+if(endX-startX>50){
+
+document.getElementById("pages").style.transform="translateX(0%)"
+
+}
 
 })
 
