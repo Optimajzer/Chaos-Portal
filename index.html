@@ -12,7 +12,7 @@ height:100vh;
 display:flex;
 justify-content:center;
 align-items:center;
-background:black;
+background:#000;
 font-family:-apple-system,BlinkMacSystemFont,sans-serif;
 }
 
@@ -21,7 +21,7 @@ font-family:-apple-system,BlinkMacSystemFont,sans-serif;
 .phone{
 width:360px;
 height:720px;
-border-radius:45px;
+border-radius:50px;
 overflow:hidden;
 position:relative;
 box-shadow:0 0 80px black;
@@ -34,11 +34,10 @@ position:absolute;
 width:100%;
 height:100%;
 background:
-radial-gradient(circle at 20% 20%,#ff4ecd,transparent 40%),
-radial-gradient(circle at 80% 30%,#4e8cff,transparent 40%),
-radial-gradient(circle at 50% 80%,#00ffa6,transparent 40%),
+radial-gradient(circle at 30% 20%,#ff3ec9,transparent 40%),
+radial-gradient(circle at 80% 40%,#4c7cff,transparent 40%),
+radial-gradient(circle at 40% 90%,#00ffa2,transparent 40%),
 black;
-filter:saturate(1.3);
 }
 
 /* STATUS BAR */
@@ -55,7 +54,7 @@ padding:0 18px;
 box-sizing:border-box;
 color:white;
 font-size:14px;
-z-index:5;
+z-index:10;
 }
 
 /* PAGES */
@@ -66,7 +65,7 @@ top:40px;
 width:200%;
 height:100%;
 display:flex;
-transition:0.4s;
+transition:0.35s;
 }
 
 /* PAGE */
@@ -95,9 +94,9 @@ border-radius:18px;
 display:flex;
 align-items:center;
 justify-content:center;
-font-size:28px;
 margin:auto;
-box-shadow:0 8px 20px rgba(0,0,0,0.5);
+font-size:28px;
+box-shadow:0 10px 20px rgba(0,0,0,0.5);
 }
 
 .label{
@@ -107,11 +106,11 @@ margin-top:6px;
 
 /* COLORS */
 
-.ai{background:linear-gradient(#5a9cff,#2a6cff);}
+.ai{background:linear-gradient(#5fa8ff,#2563eb);}
 .games{background:linear-gradient(#34d399,#059669);}
 .chaos{background:linear-gradient(#c084fc,#7c3aed);}
 .logs{background:linear-gradient(#fbbf24,#f59e0b);}
-.browser{background:linear-gradient(#60a5fa,#2563eb);}
+.browser{background:linear-gradient(#60a5fa,#1d4ed8);}
 .settings{background:linear-gradient(#9ca3af,#4b5563);}
 
 /* DOCK */
@@ -123,7 +122,7 @@ left:20px;
 right:20px;
 height:80px;
 border-radius:30px;
-background:rgba(255,255,255,0.12);
+background:rgba(255,255,255,0.15);
 backdrop-filter:blur(20px);
 display:flex;
 justify-content:space-around;
@@ -141,13 +140,13 @@ color:white;
 display:none;
 padding:20px;
 box-sizing:border-box;
-z-index:10;
+z-index:20;
 }
 
 .back{
 margin-bottom:20px;
-opacity:0.6;
 cursor:pointer;
+opacity:0.7;
 }
 
 /* CHAOS NOTIFICATION */
@@ -157,11 +156,17 @@ position:absolute;
 top:60px;
 left:50%;
 transform:translateX(-50%);
-background:rgba(0,0,0,0.8);
-color:white;
-padding:12px 20px;
+background:rgba(0,0,0,0.85);
+padding:10px 20px;
 border-radius:14px;
+color:white;
 display:none;
+}
+
+input,button{
+padding:10px;
+border-radius:10px;
+border:none;
 }
 
 </style>
@@ -174,7 +179,7 @@ display:none;
 <div class="wallpaper"></div>
 
 <div class="status">
-<div id="time"></div>
+<div id="clock"></div>
 <div>📶 🔋</div>
 </div>
 
@@ -208,7 +213,6 @@ display:none;
 
 </div>
 
-
 <div class="page">
 
 <div class="app" onclick="openApp('browser')">
@@ -235,18 +239,22 @@ display:none;
 
 </div>
 
-<!-- APPS -->
+<!-- AI APP -->
 
 <div class="appscreen" id="ai">
 
 <div class="back" onclick="closeApp()">← Home</div>
 
-<h2>AI</h2>
+<h2>AI Chat</h2>
 
-<input placeholder="Ask something..." style="width:100%;padding:10px;border-radius:10px;border:none">
+<input id="aiInput" placeholder="Ask something...">
+<button onclick="ai()">Send</button>
+
+<p id="aiOutput"></p>
 
 </div>
 
+<!-- GAME -->
 
 <div class="appscreen" id="games">
 
@@ -254,12 +262,13 @@ display:none;
 
 <h2>Dice Game</h2>
 
-<button onclick="dice()">Roll Dice</button>
+<button onclick="dice()">Roll</button>
 
-<h1 id="diceResult"></h1>
+<h1 id="dice"></h1>
 
 </div>
 
+<!-- BROWSER -->
 
 <div class="appscreen" id="browser">
 
@@ -267,13 +276,12 @@ display:none;
 
 <h2>Browser</h2>
 
-<input id="url" placeholder="Enter URL" style="width:80%">
-<button onclick="go()">Go</button>
-
-<iframe id="frame" style="width:100%;height:80%;border:none;margin-top:10px"></iframe>
+<input id="url" placeholder="https://">
+<button onclick="go()">Open</button>
 
 </div>
 
+<!-- CHAOS -->
 
 <div class="appscreen" id="chaos">
 
@@ -285,12 +293,13 @@ display:none;
 
 </div>
 
+<!-- LOGS -->
 
 <div class="appscreen" id="logs">
 
 <div class="back" onclick="closeApp()">← Home</div>
 
-<h2>Logs</h2>
+<h2>System Logs</h2>
 
 <p>No logs yet</p>
 
@@ -298,18 +307,18 @@ display:none;
 
 </div>
 
-
 <script>
 
 /* CLOCK */
 
 function clock(){
 
-const d=new Date()
+let d=new Date()
+
 let h=d.getHours().toString().padStart(2,'0')
 let m=d.getMinutes().toString().padStart(2,'0')
 
-document.getElementById("time").innerText=h+":"+m
+document.getElementById("clock").innerText=h+":"+m
 
 }
 
@@ -329,33 +338,23 @@ document.addEventListener("touchend",e=>{
 let endX=e.changedTouches[0].clientX
 
 if(startX-endX>50){
-
 pages.style.transform="translateX(-50%)"
-
 }
 
 if(endX-startX>50){
-
 pages.style.transform="translateX(0%)"
-
 }
 
 })
 
-/* OPEN APP */
+/* APPS */
 
 function openApp(id){
-
 document.getElementById(id).style.display="block"
-
 }
 
-/* CLOSE APP */
-
 function closeApp(){
-
 document.querySelectorAll(".appscreen").forEach(a=>a.style.display="none")
-
 }
 
 /* CHAOS */
@@ -364,8 +363,8 @@ function chaos(){
 
 let events=[
 "Reality glitch detected",
-"Unknown signal from void",
-"Chaos level increased",
+"Unknown signal",
+"Chaos level rising",
 "System anomaly"
 ]
 
@@ -376,22 +375,14 @@ let n=document.getElementById("notify")
 n.innerText=e
 n.style.display="block"
 
-setTimeout(()=>{
-
-n.style.display="none"
-
-},3000)
+setTimeout(()=>n.style.display="none",3000)
 
 }
 
 /* GAME */
 
 function dice(){
-
-let r=Math.floor(Math.random()*6)+1
-
-document.getElementById("diceResult").innerText=r
-
+document.getElementById("dice").innerText=Math.floor(Math.random()*6)+1
 }
 
 /* BROWSER */
@@ -400,7 +391,35 @@ function go(){
 
 let url=document.getElementById("url").value
 
-document.getElementById("frame").src=url
+if(!url.startsWith("http")){
+url="https://"+url
+}
+
+window.open(url)
+
+}
+
+/* AI */
+
+function ai(){
+
+let q=document.getElementById("aiInput").value.toLowerCase()
+
+let answers={
+hello:"Hello human.",
+hi:"Hi.",
+chaos:"Chaos is everywhere.",
+who:"I am Chaos AI.",
+help:"Try asking about chaos."
+}
+
+let a="I don't understand."
+
+for(let k in answers){
+if(q.includes(k)){a=answers[k]}
+}
+
+document.getElementById("aiOutput").innerText=a
 
 }
 
